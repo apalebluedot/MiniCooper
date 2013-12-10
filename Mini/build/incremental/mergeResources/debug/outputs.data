@@ -1,0 +1,11 @@
+# incremental data. DO NOT EDIT.
+# format is <lastModified> <length> <SHA-1> <path>
+# Encoding is UTF-8
+1385847826000 9332 4e0e62a430558d0cce3c5dee6f4709055a63a45c /home/bradley/AndroidStudioProjects/MiniProject/Mini/build/res/all/debug/drawable-xhdpi/ic_launcher.png
+1385847826000 5946 4bf7402bd7df466a787014bdbf5cafd9aa89c2b5 /home/bradley/AndroidStudioProjects/MiniProject/Mini/build/res/all/debug/drawable-hdpi/ic_launcher.png
+1385847826000 17765 702fd3311475c099afc13c0b03375d917cc82018 /home/bradley/AndroidStudioProjects/MiniProject/Mini/build/res/all/debug/drawable-xxhdpi/ic_launcher.png
+1385847826000 3121 c13193c37274d333ac028cc72c260b891662d9d0 /home/bradley/AndroidStudioProjects/MiniProject/Mini/build/res/all/debug/drawable-mdpi/ic_launcher.png
+1385847825000 329 b7568e12aa2b8472fbef0cb4cf4c3f850bcb9023 /home/bradley/AndroidStudioProjects/MiniProject/Mini/build/res/all/debug/values-v14/values.xml
+1385847825000 919 13e8e3e6e95da02f3f3c66f97651a83e49493014 /home/bradley/AndroidStudioProjects/MiniProject/Mini/build/res/all/debug/values-v11/values.xml
+1385847825000 2059 6e963b074c86511f15d7d919f26b7d45b503fda6 /home/bradley/AndroidStudioProjects/MiniProject/Mini/build/res/all/debug/values/values.xml
+1385847825000 1949 edb095a1aa8883f1596a33962ea4854ad78c6555 /home/bradley/AndroidStudioProjects/MiniProject/Mini/build/res/all/debug/layout/activity_fullscreen.xml
