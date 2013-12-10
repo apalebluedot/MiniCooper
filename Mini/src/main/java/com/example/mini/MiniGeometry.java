@@ -56,14 +56,14 @@ public class MiniGeometry{
         try{
             BufferedReader file = new BufferedReader( new FileReader(fileName));
             try{
-              _numVertices = Integer.parseInt(file.readLine());
+                _numVertices = Integer.parseInt(file.readLine());
+                _data=new ArrayList<Float>();
+                for (int i = 0; i <_numVertices; i+=1){
+                    String line = file.readLine();
+                }
             } catch(IOException e){
                 System.out.println("End of file");
             }
-            try{
-
-            }
-
         }catch (FileNotFoundException e){
             System.out.println("Bad File loc");
         }
