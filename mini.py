@@ -5,9 +5,7 @@
 from __future__ import division
 
 import platform
-from ctypes import * 
-
-import pyglet
+from cython import * 
 
 # Required for my darwin patch
 
