@@ -1,4 +1,0 @@
-MiniCooper
-==========
-
-Mini

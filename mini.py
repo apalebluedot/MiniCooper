@@ -10,17 +10,12 @@ from ctypes import *
 import pyglet
 
 # Required for my darwin patch
-if platform.system() == 'Darwin':
-    pyglet.options['shadow_window'] = False
 
-from pyglet.window import key
-from pyglet.window import mouse
-from pyglet.gl import *
 import numpy
 from math import cos, sin 
 import sys
 import Image
-
+import kivy.graphics.opengl
 import mini_geometry
 
 ##################################################################
@@ -87,7 +82,7 @@ def loadTexture(filename, texUnit):
 class Window(pyglet.window.Window):
     def __init__(self):
         # Create an OpenGL 3.2 context; initialize with that
-        config = pyglet.gl.Config(double_buffer = True, 
+        '''config = pyglet.gl.Config(double_buffer = True, 
                                   depth_size = 24, 
                                   major_version=3, 
                                   minor_version=2, 
@@ -96,13 +91,13 @@ class Window(pyglet.window.Window):
         super(Window, self).__init__(caption ="Gfx Assignment 3",
                                      width = 600, height = 600, 
                                      resizable = True,
-                                     config = config)
+                                     config = config)'''
         # The mini model
         self._mini = mini_geometry.MiniGeometry()
         # TODO: Define any other member variables you need here
         # Initialize GL state: Enable depth testing
-        glClearColor(1, 1, 1, 1)
-        glEnable(GL_DEPTH_TEST)
+        #glClearColor(1, 1, 1, 1)
+        #glEnable(GL_DEPTH_TEST)
         self.theta=180
         self.near=200
         self.far=600
@@ -379,6 +374,6 @@ class Window(pyglet.window.Window):
         # Always redraw after keypress
         self.on_draw()
 # Run the actual application
-if __name__ == "__main__":
-    window = Window()
-    pyglet.app.run()
+#if __name__ == "__main__":
+#    window = Window()
+#    pyglet.app.run()
