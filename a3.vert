@@ -1,6 +1,9 @@
 // A3 vertex shader
 // Transform position into clip coordinates
 #version 150
+#ifdef GL_ES
+    precision highp float;
+#endif
 
 // TODO: Define any uniforms you need here
 /*uniform float theta;

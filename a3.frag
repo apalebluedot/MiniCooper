@@ -1,6 +1,10 @@
 // A3 fragment shader
 // Not much to do here other than set the color
 #version 150
+#ifdef GL_ES
+    precision highp float;
+#endif
+
 
 // Any uniforms you have go here
 //uniform fragColor2
