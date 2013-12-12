@@ -68,7 +68,6 @@ class MiniGeometry(object):
                 start, end = (int(x) for x in line.split()[:2])
                 name = " ".join(line.split()[2:])
                 self._groups[name] = start, end
-    
     @property
     def numVertices(self):
         """The number of vertices in the geometry.

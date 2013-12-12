@@ -1,64 +1,73 @@
-from __future__ import division
 from kivy.app import App
-from kivy.uix.widget import Widget
-from kivy.uix.popup import Popup
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-from kivy.uix.textinput import TextInput
-from kivy.uix.button import Button
+from kivy.clock import Clock
 from kivy.core.window import Window
-from kiv.resources import resource_find
+from kivy.uix.widget import Widget
+from kivy.resources import resource_find
 from kivy.graphics.transformation import Matrix
 from kivy.graphics.opengl import *
 from kivy.graphics import *
-from kivy.clock import Clock
 import mini_geometry
 
-class MainFrame(Widget):
-	def __init__(self, *larg, **kw):
-		self.canvas=RenderContext(compute_normal_mat=False)
-		super(MainFrame, self).__init__(*larg, **kw)
-		with self.canvas:
-			self.cb=Callback(self.setup_gl_context)
-			PushMatrix()
-			self.setup_scene()
-			self.cb=Callback(self.reset_gl_context)
-		self.mini=mini_geometry.Mini_geometry()
-		Clock.schedule_interval(self.step, 1 / 30.)
 
-	def setup_gl_context(self, *args):
-		glEnable(GL_DEPTH_TEST)
+class Renderer(Widget):
+    def __init__(self, **kwargs):
+        self.canvas = RenderContext(compute_normal_mat=True)
+        self.canvas.shader.source = resource_find('simple.glsl')
+        self.scene = mini_geometry.MiniGeometry()
+        super(Renderer, self).__init__(**kwargs)
+        with self.canvas:
+            self.cb = Callback(self.setup_gl_context)
+            PushMatrix()
+            self.setup_scene()
+            PopMatrix()
+            self.cb = Callback(self.reset_gl_context)
+        Clock.schedule_interval(self.update_glsl, 1 / 60.)
 
-	def reset_gl_context(self, *args):
-		glDisable(GL_DEPTH_TEST)
+    def setup_gl_context(self, *args):
+        glEnable(GL_DEPTH_TEST)
 
-	def update_glsl(self, *largs):
-		asp=self.width/float(self.height)
-		proj=Matrix().view_clip(-asp, asp, -1, 1, 1, 100, 1)
-		self.canvas['projection_mat']=proj
-		self.canvas['diff_light']=(1.0, 1.0, 0.8)
-		self.canvas['amb_light']=(0.1, 0.1, 0.1)
+    def reset_gl_context(self, *args):
+        glDisable(GL_DEPTH_TEST)
 
-	def setup_scene(self):
-		Color(1,1,1,1)
-		PushMatrix()
-		Translate(0,0,-3)
-		self.rot=Rotate(1,0,1,0)
-		m=self.scene.objects.values()[0]
-		UpdateNormalMatrix()
-		self.mesh=(
-			vertices=self.mini.vertexdata,
-			indices=self.mini.indices,
-			fmt=m.vertex_format,
-			mode='triangles',
-		)
-		PopMatrix()
+    def update_glsl(self, *largs):
+        asp = self.width / float(self.height)
+        proj = Matrix().view_clip(-asp, asp, -1, 1, 1, 100, 1)
+        self.canvas['projection_mat'] = proj
+        self.canvas['diffuse_light'] = (1.0, 1.0, 0.8)
+        self.canvas['ambient_light'] = (0.1, 0.1, 0.1)
+        self.rot.angle += 1
 
-class MiniApp(App):
-	def build(self):
-		root=MainFrame()
-		return root
+    def setup_scene(self):
+        Color(1, 1, 1, 1)
+        PushMatrix()
+        Translate(0, 0, -3)
+        self.rot = Rotate(1, 0, 1, 0)
+        vertex_format=[
+            ('v_pos', 3, 'float'),  # <--- These are GLSL shader variable names.
+            ('v_normal', 3, 'float'),
+            ('v_uv', 2, 'float'),
+        ]
+        UpdateNormalMatrix()
+        #vertices=[]
+        #for i in range(self.scene._numVertices):
+        	#vertices.append(self._mini.vertexdata[8*i])
+        	#vertices.append(self._mini.vertexdata[8*i+1])
+        	#vertices.append(self._mini.vertexdata8*i+2])
+        #	vertices.append(self.scene.vertexdata[8*i:8*i+3])
+        
 
-if __name__='main':
-		MiniApp().run()
+        self.mesh = Mesh(
+            vertices=self.scene.vertexdata.tolist(),
+            indices=self.scene.indices.tolist(),
+            fmt=vertex_format,
+            mode='triangles',
+        )
+        PopMatrix()
 
+
+class RendererApp(App):
+    def build(self):
+        return Renderer()
+
+if __name__ == "__main__":
+    RendererApp().run()

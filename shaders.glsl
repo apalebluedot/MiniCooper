@@ -1,7 +1,6 @@
 ---VERTEX SHADER---
 // A3 vertex shader
 // Transform position into clip coordinates
-#version 150
 #ifdef GL_ES
     precision highp float;
 #endif
@@ -11,14 +10,15 @@
 uniform float scale;*/
 
 in vec3 normal;
-uniform mat4 matrix;
-uniform mat4 perspective;
+uniform mat4 modelview_mat;
+uniform mat4 projection_mat
 
 //uniform bool reset;
 // For A3, the only vertex attribute you need is the position. If you added
 // any more, they go here
-in vec3 position;
-in vec2 texcoord;
+attribute vec3 v_pos;
+attribute vec2 v_uv;
+attribute vec4 v_uv
 
 out vec2 fragTexcoord;
 
@@ -46,8 +46,13 @@ void main(void)
 		vec4(0, sin(45), cos(45), 0),
 		vec4(0, 0, -400, 1));
 	
-	gl_Position=perspective * viewMatx* matrix* vec4(position, 1.0);
-	fragTexcoord=texcoord;
+	/*gl_Position=perspective * viewMatx* matrix* vec4(position, 1.0);
+	fragTexcoord=texcoord;*/
+
+	vec4 pos = modelview_mat * vec4(v_pos,1.0);
+	gl_Position=projection_mat * pos;
+	frag_color=vec4(1,1,1,1);
+	uv_vec=v_uv;
 
 
 }
@@ -55,7 +60,6 @@ void main(void)
 ---FRAGMENT SHADER---
 // A3 fragment shader
 // Not much to do here other than set the color
-#version 150
 #ifdef GL_ES
     precision highp float;
 #endif
@@ -63,22 +67,26 @@ void main(void)
 
 // Any uniforms you have go here
 //uniform fragColor2
-uniform vec3 car;
-uniform sampler2D carTexture;
+varying vec4 frag_color;
+varying vec2 uv_vec;
+
+uniform sampler2D tex;
 
 // Interpolated inputs. Only if you created some in your vertex program
 uniform vec3 Color;
 in vec2 fragTexcoord;
 // The output. Always a color
-out vec4 fragColor;
+out vec4 frag_color;
 
 void main() 
 {  
-    // Output the assigned color
+    /*// Output the assigned color
     if(Color[0]==0 && Color[1]==0 && Color[2]==0){
       fragColor=texture(carTexture, fragTexcoord);  
     }
     else{
       fragColor=vec4(Color,1.0);
-    }
+    }*/
+    vec4 color = texture2D(tex, uv_vec)*frag_color;
+    gl_FragColor=color;
 }
