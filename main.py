@@ -6,7 +6,7 @@ from kivy.resources import resource_find
 from kivy.graphics.transformation import Matrix
 from kivy.graphics.opengl import *
 from kivy.graphics import *
-from kivy.core.image import Image
+from kivy.core.image import Image as Image
 import mini_geometry
 
 
@@ -50,70 +50,61 @@ class Renderer(Widget):
     def __init__(self, **kwargs):
 		self.canvas = RenderContext(compute_normal_mat=True)
 		self.canvas.shader.source = resource_find('simple.glsl')
-		self.scene = mini_geometry.MiniGeometry()
+		self.scene =  mini_geometry.MiniGeometry()
 		self._tloc=resource_find('mini-diffuse.png')
 
 		with self.canvas:
-			Color(1,1,1)
-			BindTexture(source='mini-diffuse.png', index=1,)
+			#Color(1,0,1)
+			#BindTexture(source='mini-diffuse.png', index=1)
 			self.cb = Callback(self.setup_gl_context)
 			PushMatrix()
 			self.setup_scene()
 			PopMatrix()
 			self.cb = Callback(self.reset_gl_context)
-		self.canvas['texture1']=1
+		#self.canvas['texture1']=1
 		super(Renderer, self).__init__(**kwargs)
 		Clock.schedule_interval(self.update_glsl, 1 / 60.)
 
     def setup_gl_context(self, *args):
         glEnable(GL_DEPTH_TEST)
-        glEnable(GL_TEXTURE_2D)
-        glEnable(GL_BLEND)
+        glEnable(GL_CULL_FACE)
 
     def reset_gl_context(self, *args):
         glDisable(GL_DEPTH_TEST)
 
+
     def update_glsl(self, *largs):
-        #asp = self.width / float(self.height)
+        asp = self.width / float(self.height)
         #proj = Matrix().view_clip(-asp, asp, -1, 1, 1, 100, 1)
-        self.canvas['modelview_mat']=Window.render_context['modelview_mat']
-        self.canvas['projection_mat'] = Window.render_context['projection_mat']
-        #self.canvas['projection_mat']=proj
+        proj = Matrix().view_clip(0, self.width, 0, self.height, 1, 100, 0)
+        #self.canvas['modelview_mat']=Window.render_context['modelview_mat']
+        #self.canvas['projection_mat'] = Window.render_context['projection_mat']
+        self.canvas['projection_mat']=proj
         self.canvas['diffuse_light'] = (1.0, 1.0, 0.8)
         self.canvas['ambient_light'] = (0.1, 0.1, 0.1)
-        #self.rot.angle += 1
+        self.rot.angle += 1
 
     def setup_scene(self):
-        Color(1, 1, 1, 1)
+        #Color(1, 1, 1, 1)
         PushMatrix()
-        Translate(0, 0, -3)
-        self.rot = Rotate(1, 0, 1, 0)
+        Translate(300, 340, -30)
+        self.rot = Rotate(1, 1, 1, 0)
+        self.canvas['tex']=Image('mini-diffuse.png').texture.flip_vertical()
         vertex_format=[
             ('v_pos', 3, 'float'),
             ('v_normal', 3, 'float'),
-            ('v_uv', 2, 'float'),
+            ('v_tc0', 2, 'float')
         ]
-        #for part in self.scene.parts:
-        #	start,end=self.scene.group(part)
-       	#	offset = sizeof(GLushort)* self.scene.indicesPerFace * start
-        #	count=self.scene.indicesPerFace * (end - start)
 
         UpdateNormalMatrix()
-        #vertices=[]
-        #for i in range(self.scene._numVertices):
-        	#vertices.append(self._mini.vertexdata[8*i])
-        	#vertices.append(self._mini.vertexdata[8*i+1])
-        	#vertices.append(self._mini.vertexdata8*i+2])
-        #	vertices.append(self.scene.vertexdata[8*i:8*i+3])
-        
-
         self.mesh = Mesh(
             vertices=self.scene.vertexdata.tolist(),
             indices=self.scene.indices.tolist(),
             fmt=vertex_format,
             mode='triangles',
         )
-
+        BindTexture
+        self.mesh.texture=Image('mini-diffuse.png').texture.flip_vertical()
         PopMatrix()
 
 

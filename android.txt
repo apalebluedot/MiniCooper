@@ -1,0 +1,3 @@
+title=MiniCooper
+author=Bradley Barnes
+orientation=landscape
