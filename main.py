@@ -54,12 +54,13 @@ class Renderer(Widget):
         self._tloc=resource_find('mini-diffuse.png')
         self.texture=Image("mini-diffuse.png").texture
         with self.canvas:
-			BindTexture(texture=self.texture, index=1)
-			self.cb = Callback(self.setup_gl_context)
-			PushMatrix()
-			self.setup_scene()
-			PopMatrix()
-			self.cb = Callback(self.reset_gl_context)
+            glEnable(GL_DEPTH_TEST)
+            BindTexture(texture=self.texture, index=1)
+            self.cb = Callback(self.setup_gl_context)
+            PushMatrix()
+            self.setup_scene()
+            PopMatrix()
+            self.cb = Callback(self.reset_gl_context)
         self.canvas['tex']=1
         super(Renderer, self).__init__(**kwargs)
         Clock.schedule_interval(self.update_glsl, 1 / 60.)
@@ -102,8 +103,16 @@ class Renderer(Widget):
             fmt=vertex_format,
             mode='triangles',
         )
+        colored=["Front Passenger Tire","Front Driver Tire", "Rear Driver Tire", "Rear Passenger Tire", "Windows", "Vents", "License", "Front Driver Rim", "Front Passenger Rim", "Rear Passenger Rim", "Rear Driver Rim", "Rear Wiper"]
+        for part in self.scene.parts:
+            start,end=self.scene.group(part)
+            count=self.scene.indicesPerFace*(end-start)
+            if part in colored:
+                self.canvas['colors']=colormap[part]
+                print colormap[part]
+            else:
+                self.canvas['colors']=nocolor["nope"]
 
-        #self.mesh.texture=Image('mini-diffuse.png').texture.flip_vertical()
         PopMatrix()
 
     

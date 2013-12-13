@@ -9,7 +9,7 @@ attribute vec2  v_tc0;
 
 uniform mat4 modelview_mat;
 uniform mat4 projection_mat;
-
+varying vec3 colors;
 varying vec4 frag_color;
 varying vec2 uv_vec;
 varying vec4 normal_vec;
@@ -35,6 +35,7 @@ void main (void) {
 varying vec2 uv_vec;
 varying vec4 normal_vec;
 varying vec4 vertex_pos;
+varying vec3 colors;
 
 uniform sampler2D tex;
 uniform mat4 normal_mat;
@@ -47,5 +48,10 @@ void main (void){
     float theta = clamp(dot(v_normal, v_light), 0.0, 1.0);
     //vec4 color = vec4(1.0,1.0,1.0,1.0);
     vec4 light = vec4(theta,theta,theta,1.0);
-    gl_FragColor = light*color;
+    //if(colors[0]==0 && colors[1]==0 && colors[2]==0){
+        gl_FragColor = light*color;
+    /*}
+    else{
+        gl_FragColor=light*vec4(colors,1.0);
+    //}*/
 }
