@@ -72,7 +72,6 @@ class Renderer(Widget):
         self._tloc=resource_find('mini-diffuse.png')
         self.texture=Image("mini-diffuse.png").texture
         with self.canvas:
-			#Color(1,0,1)
 			BindTexture(texture=self.texture, index=1)
 			self.cb = Callback(self.setup_gl_context)
 			PushMatrix()
@@ -84,11 +83,13 @@ class Renderer(Widget):
         Clock.schedule_interval(self.update_glsl, 1 / 60.)
 
     def setup_gl_context(self, *args):
-        glEnable(GL_DEPTH_TEST)
-        glEnable(GL_CULL_FACE)
+        #glEnable(GL_DEPTH_TEST)
+        #glEnable(GL_CULL_FACE)
+        pass
 
     def reset_gl_context(self, *args):
-        glDisable(GL_DEPTH_TEST)
+        #glDisable(GL_DEPTH_TEST)
+        pass
 
 
     def update_glsl(self, *largs):
