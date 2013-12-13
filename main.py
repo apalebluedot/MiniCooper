@@ -46,6 +46,9 @@ colormap = {
 }
 nocolor={"nope":(0,0,0)}
 
+'''EXAMPLES BORROWED FROM KIVY 3DRENDERING 
+    https://github.com/kivy/kivy/blob/master/examples/3Drendering/main.py
+'''
 class Renderer(Widget):
     def __init__(self, **kwargs):
         self.canvas = RenderContext(compute_normal_mat=True)
@@ -66,18 +69,16 @@ class Renderer(Widget):
         Clock.schedule_interval(self.update_glsl, 1 / 60.)
 
     def setup_gl_context(self, *args):
-        #glEnable(GL_DEPTH_TEST)
-        #glEnable(GL_CULL_FACE)
-        pass
+        glEnable(GL_DEPTH_TEST)
+        glEnable(GL_CULL_FACE)
+
 
     def reset_gl_context(self, *args):
-        #glDisable(GL_DEPTH_TEST)
-        pass
+        glDisable(GL_DEPTH_TEST)
 
 
     def update_glsl(self, *largs):
         asp = self.width / float(self.height)
-        #proj = Matrix().view_clip(-asp, asp, -1, 1, 1, 100, 1)
         proj = Matrix().view_clip(0, self.width, 0, self.height, 1, 900, 0)
         self.canvas['projection_mat']=proj
         self.canvas['diffuse_light'] = (1.0, 1.0, 0.8)
@@ -85,7 +86,6 @@ class Renderer(Widget):
         self.rot.angle += 1
 
     def setup_scene(self):
-        #Color(1, 1, 1, 1)
         PushMatrix()
         Translate(300, 340, -30)
         self.rot = Rotate(1, 1, 1, 0)
@@ -109,7 +109,6 @@ class Renderer(Widget):
             count=self.scene.indicesPerFace*(end-start)
             if part in colored:
                 self.canvas['colors']=colormap[part]
-                print colormap[part]
             else:
                 self.canvas['colors']=nocolor["nope"]
 
