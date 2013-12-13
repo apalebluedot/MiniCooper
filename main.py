@@ -6,7 +6,6 @@ from kivy.resources import resource_find
 from kivy.graphics.transformation import Matrix
 from kivy.graphics.opengl import *
 from kivy.graphics import *
-import ctypes
 from kivy.core.image import Image as Image
 import mini_geometry
 
@@ -46,23 +45,6 @@ colormap = {
     "Windows":(0.5, 0.5, 0.5),
 }
 nocolor={"nope":(0,0,0)}
-def loadTexture(filename, texUnit):
-    # Activate the texture unit (starting at 0); need 1 per texture
-    glActiveTexture(GL_TEXTURE0 + texUnit)
-    #texture = GLuint()
-    glGenTextures(1)
-    glBindTexture(GL_TEXTURE_2D,0)
-    # Texture does not wrap
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
-    # How is the image sampled?
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-    # Load the image using PIL
-    image = Image("mini-diffuse.png").texture.flip_vertical()
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1)
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1024, 1024, 0, GL_RGBA, GL_UNSIGNED_BYTE, image)
-
 
 class Renderer(Widget):
     def __init__(self, **kwargs):
@@ -95,7 +77,7 @@ class Renderer(Widget):
     def update_glsl(self, *largs):
         asp = self.width / float(self.height)
         #proj = Matrix().view_clip(-asp, asp, -1, 1, 1, 100, 1)
-        proj = Matrix().view_clip(0, self.width, 0, self.height, 1, 100, 0)
+        proj = Matrix().view_clip(0, self.width, 0, self.height, 1, 900, 0)
         self.canvas['projection_mat']=proj
         self.canvas['diffuse_light'] = (1.0, 1.0, 0.8)
         self.canvas['ambient_light'] = (0.1, 0.1, 0.1)
